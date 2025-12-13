@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Cache
+.cache/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Bun
+bun.lockb
+
+# Test coverage
+coverage/
+
+# MCP local config
+.mcp.json
+
+# Serena config
+.serena/
+
+# Claude Code prompts (user-specific)
+CLAUDE_CODE_PROMPTS.md

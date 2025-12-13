@@ -1,0 +1,51 @@
+{
+  "name": "noaa-space-weather-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for NOAA space weather data - Designed for amateur radio operators to analyze solar activity for DX propagation",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "dev:http": "bun run --watch src/index.ts --http",
+    "start": "bun run src/index.ts",
+    "start:http": "bun run src/index.ts --http",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage",
+    "lint": "biome check src tests",
+    "lint:fix": "biome check --write src tests",
+    "format": "biome format --write src tests",
+    "typecheck": "tsc --noEmit",
+    "check": "bun run typecheck && bun run lint && bun run test",
+    "docker:build": "docker build -t noaa-space-weather-mcp .",
+    "docker:run": "docker run -p 3000:3000 --rm noaa-space-weather-mcp"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.24.3",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.8",
+    "@types/bun": "latest",
+    "typescript": "^5.9.3"
+  },
+  "license": "MIT",
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/numa08/noaa-space-weather-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "noaa",
+    "space-weather",
+    "solar-activity",
+    "amateur-radio",
+    "ham-radio",
+    "dx",
+    "propagation"
+  ],
+  "engines": {
+    "bun": ">=1.1.0"
+  }
+}
