@@ -17,8 +17,11 @@
     "format": "biome format --write src tests",
     "typecheck": "tsc --noEmit",
     "check": "bun run typecheck && bun run lint && bun run test",
-    "docker:build": "docker build -t noaa-space-weather-mcp .",
-    "docker:run": "docker run -p 3000:3000 --rm noaa-space-weather-mcp"
+    "docker:build": "docker build -t numa08/noaa-space-weather-mcp:latest -t numa08/noaa-space-weather-mcp:http .",
+    "docker:build:stdio": "docker build -f Dockerfile.stdio -t numa08/noaa-space-weather-mcp:stdio .",
+    "docker:run": "docker run -p 3000:3000 --rm numa08/noaa-space-weather-mcp",
+    "docker:run:stdio": "docker run -i --rm numa08/noaa-space-weather-mcp:stdio",
+    "docker:push": "docker push numa08/noaa-space-weather-mcp --all-tags"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.24.3",

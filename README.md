@@ -39,18 +39,34 @@ bun run dev:http
 ### Docker
 
 ```bash
-# イメージのビルド
-docker build -t noaa-space-weather-mcp .
+# HTTPモード用イメージのビルド（Bun）
+docker build -t numa08/noaa-space-weather-mcp:http .
+
+# STDIOモード用イメージのビルド（Node.js）
+docker build -f Dockerfile.stdio -t numa08/noaa-space-weather-mcp:stdio .
 
 # コンテナの起動（HTTPモード）
-docker run -p 3000:3000 noaa-space-weather-mcp
+docker run -p 3000:3000 numa08/noaa-space-weather-mcp:http
+
+# コンテナの起動（STDIOモード）
+docker run -i numa08/noaa-space-weather-mcp:stdio
 ```
 
-> ⚠️ **注意**: DockerコンテナでのSTDIOモードはサポートされていません。
-> Bunのstdoutバッファリングの問題により、Dockerコンテナ内でSTDIOトランスポートを使用すると、
-> レスポンスが即座に送信されずバッファリングされます。
-> コンテナ化されたデプロイメントにはHTTPモードを使用してください。
-> 詳細: https://github.com/oven-sh/bun/issues/15893
+#### Docker Hubからの利用
+
+```bash
+# HTTPモード
+docker pull numa08/noaa-space-weather-mcp:http
+docker run -p 3000:3000 numa08/noaa-space-weather-mcp:http
+
+# STDIOモード
+docker pull numa08/noaa-space-weather-mcp:stdio
+docker run -i numa08/noaa-space-weather-mcp:stdio
+```
+
+> **Note**: STDIOモードではNode.jsランタイムを使用しています。
+> これはBunのstdoutバッファリング問題（[oven-sh/bun#15893](https://github.com/oven-sh/bun/issues/15893)）を
+> 回避するためです。HTTPモードではBunを使用し、高速な起動とレスポンスを実現しています。
 
 ## MCPサーバーのセットアップ
 
@@ -100,7 +116,7 @@ Streamable HTTPトランスポート（ステートレスモード）を使用�
 bun run start:http --port 3000
 
 # Dockerで起動
-docker run -p 3000:3000 noaa-space-weather-mcp
+docker run -p 3000:3000 numa08/noaa-space-weather-mcp:http
 ```
 
 #### エンドポイント
@@ -119,7 +135,7 @@ docker run -p 3000:3000 noaa-space-weather-mcp
 {
   "mcpServers": {
     "noaa-space-weather": {
-      "type": "url",
+      "type": "http",
       "url": "http://localhost:3000/mcp"
     }
   }

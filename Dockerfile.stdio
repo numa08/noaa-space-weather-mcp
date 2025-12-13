@@ -1,0 +1,54 @@
+# syntax=docker/dockerfile:1
+
+# NOAA Space Weather MCP Server - STDIO Mode (Node.js)
+# This Dockerfile uses Node.js instead of Bun for STDIO transport
+# due to Bun's stdout buffering issue in Docker containers.
+# See: https://github.com/oven-sh/bun/issues/15893
+
+# Build stage
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json ./
+
+# Install dependencies using npm (compatible with package.json)
+RUN npm install
+
+# Copy source code
+COPY tsconfig.json biome.json ./
+COPY src ./src
+
+# Production stage
+FROM node:22-alpine AS production
+
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup
+
+# Copy package files and install production dependencies
+COPY package.json ./
+RUN npm install --omit=dev
+
+# Install tsx for running TypeScript directly
+RUN npm install -g tsx
+
+# Copy source from builder
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/tsconfig.json ./
+
+# Create cache directory with proper permissions
+RUN mkdir -p /app/.cache && chown -R appuser:appgroup /app
+
+# Switch to non-root user
+USER appuser
+
+# Environment variables
+ENV NODE_ENV=production
+
+# STDIO mode - reads from stdin, writes to stdout
+ENTRYPOINT ["tsx", "src/index.ts"]
+CMD []

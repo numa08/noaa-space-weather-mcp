@@ -74,11 +74,9 @@ export function createServer(config?: Partial<CacheConfig>): {
 /**
  * Run server in STDIO mode
  *
- * WARNING: STDIO mode does not work reliably in Docker containers due to
- * Bun's stdout buffering behavior. Use HTTP mode for containerized deployments.
+ * Note: When running in Docker, use Dockerfile.stdio (Node.js) instead of the
+ * default Dockerfile (Bun) due to Bun's stdout buffering issue.
  * See: https://github.com/oven-sh/bun/issues/15893
- *
- * For local development or direct execution (not in Docker), STDIO mode works correctly.
  */
 export async function runStdioServer(config?: Partial<CacheConfig>): Promise<void> {
   const { server } = createServer(config);
