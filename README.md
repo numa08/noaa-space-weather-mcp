@@ -91,20 +91,44 @@ docker run -i numa08/noaa-space-weather-mcp:stdio
 
 #### Claude Code
 
-`.claude/settings.json` に以下を追加:
+```bash
+# ローカルソースから（Bun使用）
+claude mcp add noaa-space-weather -- bun run /path/to/noaa-space-weather-mcp/src/index.ts
+
+# 設定の確認
+claude mcp list
+```
+
+### 方法2: STDIOトランスポート（Docker）
+
+Dockerコンテナを使用してSTDIOモードで接続する方法です。
+
+#### Claude Desktop
+
+`claude_desktop_config.json` に以下を追加:
 
 ```json
 {
   "mcpServers": {
     "noaa-space-weather": {
-      "command": "bun",
-      "args": ["run", "/path/to/noaa-space-weather-mcp/src/index.ts"]
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "numa08/noaa-space-weather-mcp:stdio"]
     }
   }
 }
 ```
 
-### 方法2: HTTPトランスポート（リモート/Docker）
+#### Claude Code
+
+```bash
+# Docker Hub から（Node.js STDIOイメージ）
+claude mcp add noaa-space-weather -- docker run -i --rm numa08/noaa-space-weather-mcp:stdio
+
+# 設定の確認
+claude mcp list
+```
+
+### 方法3: HTTPトランスポート（リモート/Docker）
 
 サーバーレス環境やDockerコンテナでの運用に推奨される方法です。
 Streamable HTTPトランスポート（ステートレスモード）を使用します。
@@ -129,17 +153,12 @@ docker run -p 3000:3000 numa08/noaa-space-weather-mcp:http
 
 #### Claude Code（HTTP接続）
 
-`.claude/settings.json` に以下を追加:
+```bash
+# HTTPトランスポートで接続
+claude mcp add noaa-space-weather --transport http http://localhost:3000/mcp
 
-```json
-{
-  "mcpServers": {
-    "noaa-space-weather": {
-      "type": "http",
-      "url": "http://localhost:3000/mcp"
-    }
-  }
-}
+# 設定の確認
+claude mcp list
 ```
 
 #### 動作確認
